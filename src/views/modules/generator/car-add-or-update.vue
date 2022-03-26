@@ -4,24 +4,52 @@
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
-    <el-form-item label="车牌号" prop="carlicencenum">
-      <el-input v-model="dataForm.carlicencenum" placeholder="车牌号"></el-input>
-    </el-form-item>
-    <el-form-item label="车型ID" prop="vehicleid">
-      <el-input v-model="dataForm.vehicleid" placeholder="车型ID"></el-input>
-    </el-form-item>
+
+        <el-form-item label="门店名称" prop="store">
+          <el-col :span="11">
+          <el-select v-model="dataForm.store" placeholder="门店一">
+            <el-option label="门店一" value="shanghai"></el-option>
+            <el-option label="门店二" value="beijing"></el-option>
+          </el-select>
+          </el-col>
+          <el-col :span="11">
+          <el-form-item label="车型" prop="vehicle">
+            <el-input v-model="dataForm.vehicle" placeholder="车型"></el-input>
+          </el-form-item>
+          </el-col>
+        </el-form-item>
+      <el-form-item label="车辆来源" prop="source">
+
+        <el-select v-model="dataForm.source" placeholder="车辆来源">
+          <el-option label="门店一" value="1"></el-option>
+          <el-option label="门店二" value="2"></el-option>
+        </el-select>
+      </el-form-item>
+
+
     <el-form-item label="车架号" prop="framenum">
+      <el-col :span="11">
       <el-input v-model="dataForm.framenum" placeholder="车架号"></el-input>
+      </el-col>
+      <el-col :span="11">
+      <el-form-item label="发动机号" prop="enginenum">
+
+        <el-input v-model="dataForm.enginenum" placeholder="发动机号"></el-input>
+
+      </el-form-item>
+      </el-col>
     </el-form-item>
-    <el-form-item label="发动机号" prop="enginenum">
-      <el-input v-model="dataForm.enginenum" placeholder="发动机号"></el-input>
-    </el-form-item>
-    <el-form-item label="城市ID" prop="cityid">
-      <el-input v-model="dataForm.cityid" placeholder="城市ID"></el-input>
-    </el-form-item>
-    <el-form-item label="门店ID" prop="storeid">
-      <el-input v-model="dataForm.storeid" placeholder="门店ID"></el-input>
-    </el-form-item>
+
+
+      <el-form-item label="车牌号" prop="carlicencenum">
+        <el-select v-model="dataForm.carlicencenum" placeholder="车牌号">
+          <el-option label="京" value="1"></el-option>
+          <el-option label="川" value="2"></el-option>
+        </el-select>
+
+      </el-form-item>
+
+
     <el-form-item label="运营状态" prop="carcurrentstatus">
       <el-input v-model="dataForm.carcurrentstatus" placeholder="运营状态"></el-input>
     </el-form-item>
@@ -43,9 +71,7 @@
     <el-form-item label="车辆颜色" prop="color">
       <el-input v-model="dataForm.color" placeholder="车辆颜色"></el-input>
     </el-form-item>
-    <el-form-item label="车辆来源" prop="source">
-      <el-input v-model="dataForm.source" placeholder="车辆来源"></el-input>
-    </el-form-item>
+
     <el-form-item label="行驶证" prop="drivinglicense">
       <el-input v-model="dataForm.drivinglicense" placeholder="行驶证"></el-input>
     </el-form-item>
@@ -77,11 +103,10 @@
         dataForm: {
           id: 0,
           carlicencenum: '',
-          vehicleid: '',
+          vehicle: '',
           framenum: '',
           enginenum: '',
-          cityid: '',
-          storeid: '',
+          store: '',
           carcurrentstatus: '',
           insurancedays: '',
           currentmileage: '',
@@ -100,8 +125,8 @@
           carlicencenum: [
             { required: true, message: '车牌号不能为空', trigger: 'blur' }
           ],
-          vehicleid: [
-            { required: true, message: '车型ID不能为空', trigger: 'blur' }
+          vehicle: [
+            { required: true, message: '车型不能为空', trigger: 'blur' }
           ],
           framenum: [
             { required: true, message: '车架号不能为空', trigger: 'blur' }
@@ -109,11 +134,9 @@
           enginenum: [
             { required: true, message: '发动机号不能为空', trigger: 'blur' }
           ],
-          cityid: [
-            { required: true, message: '城市ID不能为空', trigger: 'blur' }
-          ],
-          storeid: [
-            { required: true, message: '门店ID不能为空', trigger: 'blur' }
+
+          store: [
+            { required: true, message: '门店名称不能为空', trigger: 'blur' }
           ],
           carcurrentstatus: [
             { required: true, message: '运营状态不能为空', trigger: 'blur' }
@@ -171,11 +194,10 @@
             }).then(({data}) => {
               if (data && data.code === 0) {
                 this.dataForm.carlicencenum = data.car.carlicencenum
-                this.dataForm.vehicleid = data.car.vehicleid
+                this.dataForm.vehicle = data.car.vehicle
                 this.dataForm.framenum = data.car.framenum
                 this.dataForm.enginenum = data.car.enginenum
-                this.dataForm.cityid = data.car.cityid
-                this.dataForm.storeid = data.car.storeid
+                this.dataForm.store = data.car.store
                 this.dataForm.carcurrentstatus = data.car.carcurrentstatus
                 this.dataForm.insurancedays = data.car.insurancedays
                 this.dataForm.currentmileage = data.car.currentmileage
@@ -204,11 +226,10 @@
               data: this.$http.adornData({
                 'id': this.dataForm.id || undefined,
                 'carlicencenum': this.dataForm.carlicencenum,
-                'vehicleid': this.dataForm.vehicleid,
+                'vehicle': this.dataForm.vehicle,
                 'framenum': this.dataForm.framenum,
                 'enginenum': this.dataForm.enginenum,
-                'cityid': this.dataForm.cityid,
-                'storeid': this.dataForm.storeid,
+                'store': this.dataForm.store,
                 'carcurrentstatus': this.dataForm.carcurrentstatus,
                 'insurancedays': this.dataForm.insurancedays,
                 'currentmileage': this.dataForm.currentmileage,
