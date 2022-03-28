@@ -43,7 +43,7 @@
         label="车牌/车型">
         <template slot-scope="scope">
 
-          <el-tag color=blue>{{ scope.row.carlicencenum }}</el-tag>
+          <el-tag >{{ scope.row.carlicencenum }}</el-tag>
           <p style="font-size:18px;font-weight:bold">{{ scope.row.vehicle }}</p>
           <p>车架号{{ scope.row.framenum }}</p>
           <p>发动机号{{ scope.row.enginenum }}</p>
@@ -65,7 +65,7 @@
         label="运营状态">
 
         <template slot-scope="scope">
-          <el-tag color=red>{{ scope.row.carcurrentstatus }}</el-tag>
+          <el-tag  type="danger">{{ scope.row.carcurrentstatus }}</el-tag>
           <p>{{ scope.row.reviewstate }}</p>
         </template>
 
@@ -79,7 +79,7 @@
         label="到期提醒天数">
         <template slot-scope="scope">
 
-          <p style="font-size:20px;font-weight:bold;color:orange">剩余{{ scope.row.insurancedays }}天续保</p>
+          <p style="font-size:20px;font-weight:bold;color:orange">剩余{{ scope.row.insuranceday }}天续保</p>
         </template>
       </el-table-column>
       <el-table-column
@@ -95,12 +95,12 @@
         label="下次保养公里数">
       </el-table-column>
       <el-table-column
-        prop="imageurl"
+        prop="carmodelimg"
         header-align="center"
         align="center"
-        label="车辆图片">
+        label="车型图片">
         <template slot-scope="scope">
-          <img :src="scope.row.imageurl" style="width:100px;height:100px;"/>
+          <img :src="scope.row.carModelImg" style="width:100px;height:100px;"/>
         </template>
 
       </el-table-column>
@@ -184,7 +184,7 @@ export default {
       if (tab.label === '待年检') {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl('/generator/car/insuranceDaysList'),
+          url: this.$http.adornUrl('/generator/car/inspectionList'),
           method: 'get',
           params: this.$http.adornParams({
             'page': this.pageIndex,
