@@ -4,7 +4,7 @@
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()"
-             label-width="80px">
+             label-width="auto">
 
       <el-form-item label="归属门店" prop="store">
 
@@ -39,7 +39,7 @@
           <el-radio label="金色"></el-radio>
           <span class="spanColor" style="background-color:#ffc700;"></span>
           <el-radio label="灰色"></el-radio>
-          <span class="spanColor" style="background-color:#9c9c9c; "></span>
+          <span class="spanColor" style="background-color:#9c9c9c;"></span>
           <el-radio label="咖啡色"></el-radio>
           <span class="spanColor" style="background-color:#7b550f;"></span>
           <el-radio label="绿色"></el-radio>
@@ -59,8 +59,8 @@
         <el-col :span="7">
           <el-input v-model="dataForm.currentmileage" placeholder="当前车辆里程数"></el-input>
         </el-col>
-        <el-col :span="2" :offset="1">
-          <span>公里</span>
+        <el-col :span="2">
+          <span style="margin-left: 10px">公里</span>
         </el-col>
       </el-form-item>
 
@@ -79,7 +79,7 @@
       <p>上传图片要求：1.图片完整清晰，未P图伪造；2.单张图片不超过3M；3.上传文件格式为JPG或PNG</p>
 
       <el-card>
-        <el-form-item   label="行驶证" prop="drivinglicense.imgUrl">
+        <el-form-item label="行驶证" prop="drivinglicense.imgUrl">
           <el-col :span="9">
             <el-upload
               class="avatar-uploader"
@@ -99,21 +99,31 @@
             </el-form-item>
 
             <el-form-item label="车型" prop="vehicle">
-              <el-input v-model="dataForm.vehicle" placeholder="车型"></el-input>
+              <el-select v-model="dataForm.vehicleId" placeholder="请选择车型">
+                <el-option
+                  v-for="item in vehicleList"
+                  :key="item.id"
+                  :label="item.vehiclename"
+                  :value="item.id">
+                </el-option>
+              </el-select>
+
             </el-form-item>
 
             <el-form-item label="车牌号" prop="drivinglicense.carlicencenum_0">
               <el-col :span="5">
-                <el-select v-model="dataForm.drivinglicense.carlicencenum_0" placeholder="川" @change="setCarlicenceNum()">
+                <el-select v-model="dataForm.drivinglicense.carlicencenum_0" placeholder=""
+                           @change="setCarlicenceNum()">
                   <el-option label="川" value="川"></el-option>
                   <el-option label="辽" value="辽"></el-option>
                   <el-option label="陕" value="陕"></el-option>
                 </el-select>
               </el-col>
               <el-col :span="19">
-              <el-form-item  prop="drivinglicense.carlicencenum_1">
-                <el-input v-model="dataForm.drivinglicense.carlicencenum_1" placeholder="车牌号" @change="setCarlicenceNum()"></el-input>
-              </el-form-item>
+                <el-form-item prop="drivinglicense.carlicencenum_1">
+                  <el-input v-model="dataForm.drivinglicense.carlicencenum_1" placeholder="车牌号"
+                            @change="setCarlicenceNum()"></el-input>
+                </el-form-item>
               </el-col>
             </el-form-item>
 
@@ -124,12 +134,12 @@
 
 
             <el-form-item label="注册时间" prop="drivinglicense.registerTime">
-            <el-date-picker v-model="dataForm.drivinglicense.registerTime"
-              type="date"
-              placeholder="请选择注册时间"
-                            value-format="yyyy-MM-dd"
-              :picker-options="pickerOptions">
-            </el-date-picker>
+              <el-date-picker v-model="dataForm.drivinglicense.registerTime"
+                              type="date"
+                              placeholder="请选择注册时间"
+                              value-format="yyyy-MM-dd"
+                              :picker-options="this.$MyComm.pickerOptionsBefor">
+              </el-date-picker>
             </el-form-item>
 
 
@@ -152,7 +162,7 @@
         <p style="font-size:18px; color:orangered;font-weight: bold">
           请上传年检合格且加盖印章的年检证，并确保未过期或临近15天过期
         </p>
-        <el-form-item   label="年检证" prop="annualinspectioncertificate.imgUrl" >
+        <el-form-item label="年检证" prop="annualinspectioncertificate.imgUrl">
           <el-col :span="9">
             <el-upload
               class="avatar-uploader"
@@ -160,28 +170,28 @@
               :show-file-list="false"
               :on-success="handleAnnualinspectionSuccess"
               :before-upload="beforeAvatarUpload">
-              <img v-if="dataForm.annualinspectioncertificate.imgUrl" :src="dataForm.annualinspectioncertificate.imgUrl" class="avatar">
+              <img v-if="dataForm.annualinspectioncertificate.imgUrl" :src="dataForm.annualinspectioncertificate.imgUrl"
+                   class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </el-col>
 
           <el-col :span="15">
-      <el-form-item label="年检到期日期" prop="annualinspectioncertificate.dueDate">
-        <el-date-picker v-model="dataForm.annualinspectioncertificate.dueDate"
-                        type="date"
-                        placeholder="请选择年检到期日期"
-                        value-format="yyyy-MM-dd"
-                        :picker-options="pickerOptions2">
-        </el-date-picker>
-      </el-form-item>
+            <el-form-item label="年检到期日期" prop="annualinspectioncertificate.dueDate">
+              <el-date-picker v-model="dataForm.annualinspectioncertificate.dueDate"
+                              type="date"
+                              placeholder="请选择年检到期日期"
+                              value-format="yyyy-MM-dd"
+                              :picker-options="this.$MyComm.pickerOptionsAfter">
+              </el-date-picker>
+            </el-form-item>
           </el-col>
         </el-form-item>
       </el-card>
 
 
-
       <el-card>
-        <el-form-item   label="商业险保单"  prop="commercialinsurancepolicy.imgUrl">
+        <el-form-item label="商业险保单" prop="commercialinsurancepolicy.imgUrl">
           <el-col :span="9">
             <el-upload
               class="avatar-uploader"
@@ -189,35 +199,37 @@
               :show-file-list="false"
               :on-success="handleCommercialinsurancepolicySuccess"
               :before-upload="beforeAvatarUpload">
-              <img v-if="dataForm.commercialinsurancepolicy.imgUrl" :src="dataForm.commercialinsurancepolicy.imgUrl" class="avatar">
+              <img v-if="dataForm.commercialinsurancepolicy.imgUrl" :src="dataForm.commercialinsurancepolicy.imgUrl"
+                   class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </el-col>
 
           <el-col :span="15">
-            <el-form-item label="保险公司名称" prop="commercialinsurancepolicy.companyName" >
-            <el-select v-model="dataForm.commercialinsurancepolicy.companyName" placeholder="请输入保险公司名称">
-              <el-option label="保险公司一" value="保险公司一"></el-option>
-              <el-option label="保险公司二" value="保险公司二"></el-option>
-              <el-option label="保险公司三" value="保险公司三"></el-option>
-            </el-select>
+            <el-form-item label="保险公司名称" prop="commercialinsurancepolicy.companyName">
+              <el-select v-model="dataForm.commercialinsurancepolicy.companyName" placeholder="请输入保险公司名称">
+                <el-option label="保险公司一" value="保险公司一"></el-option>
+                <el-option label="保险公司二" value="保险公司二"></el-option>
+                <el-option label="保险公司三" value="保险公司三"></el-option>
+              </el-select>
             </el-form-item>
-            <el-form-item label="保险保单号" prop="commercialinsurancepolicy.number"  >
+            <el-form-item label="保险保单号" prop="commercialinsurancepolicy.number">
               <el-input v-model="dataForm.commercialinsurancepolicy.number" placeholder="请输入保险保单号"></el-input>
             </el-form-item>
-            <el-form-item label="投保使用证件号"  prop="commercialinsurancepolicy.useLicenceNumber">
-              <el-input v-model="dataForm.commercialinsurancepolicy.useLicenceNumber" placeholder="请输入投保使用证件号"></el-input>
+            <el-form-item label="投保使用证件号" prop="commercialinsurancepolicy.useLicenceNumber">
+              <el-input v-model="dataForm.commercialinsurancepolicy.useLicenceNumber"
+                        placeholder="请输入投保使用证件号"></el-input>
             </el-form-item>
-            <el-form-item label="商业险到期日期"  prop="commercialinsurancepolicy.dueDate">
+            <el-form-item label="商业险到期日期" prop="commercialinsurancepolicy.dueDate">
               <el-date-picker v-model="dataForm.commercialinsurancepolicy.dueDate"
                               type="date"
                               placeholder="请选择商业险到期日期"
                               value-format="yyyy-MM-dd"
-                              :picker-options="pickerOptions2">
+                              :picker-options="this.$MyComm.pickerOptionsAfter">
               </el-date-picker>
             </el-form-item>
 
-            <el-form-item label="第三者保险额度"  prop="commercialinsurancepolicy.thirdQuota">
+            <el-form-item label="第三者保险额度" prop="commercialinsurancepolicy.thirdQuota">
               <el-select v-model="dataForm.commercialinsurancepolicy.thirdQuota" placeholder="请输入第三者保险额度">
                 <el-option label="20万" value="20万"></el-option>
                 <el-option label="30万" value="30万"></el-option>
@@ -227,18 +239,18 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label="车损保险起赔额"  prop="commercialinsurancepolicy.initialCompensation">
-              <el-input v-model="dataForm.commercialinsurancepolicy.initialCompensation" placeholder="请输入车损保险起赔额"></el-input>
+            <el-form-item label="车损保险起赔额" prop="commercialinsurancepolicy.initialCompensation">
+              <el-input v-model="dataForm.commercialinsurancepolicy.initialCompensation"
+                        placeholder="请输入车损保险起赔额"></el-input>
             </el-form-item>
           </el-col>
         </el-form-item>
       </el-card>
 
 
-
-    <!-- 交强险保单  -->
+      <!-- 交强险保单  -->
       <el-card>
-        <el-form-item   label="交强险保单"  prop="compulsoryinsurancepolicy.imgUrl">
+        <el-form-item label="交强险保单" prop="compulsoryinsurancepolicy.imgUrl">
           <el-col :span="9">
             <el-upload
               class="avatar-uploader"
@@ -246,31 +258,33 @@
               :show-file-list="false"
               :on-success="handleCompulsoryinsurancepolicySuccess"
               :before-upload="beforeAvatarUpload">
-              <img v-if="dataForm.compulsoryinsurancepolicy.imgUrl" :src="dataForm.compulsoryinsurancepolicy.imgUrl" class="avatar">
+              <img v-if="dataForm.compulsoryinsurancepolicy.imgUrl" :src="dataForm.compulsoryinsurancepolicy.imgUrl"
+                   class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </el-col>
 
           <el-col :span="15">
-            <el-form-item label="保险公司名称" prop="compulsoryinsurancepolicy.companyName" >
+            <el-form-item label="保险公司名称" prop="compulsoryinsurancepolicy.companyName">
               <el-select v-model="dataForm.compulsoryinsurancepolicy.companyName" placeholder="请输入保险公司名称">
                 <el-option label="保险公司一" value="保险公司一"></el-option>
                 <el-option label="保险公司二" value="保险公司二"></el-option>
                 <el-option label="保险公司三" value="保险公司三"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="保险保单号" prop="compulsoryinsurancepolicy.number"  >
+            <el-form-item label="保险保单号" prop="compulsoryinsurancepolicy.number">
               <el-input v-model="dataForm.compulsoryinsurancepolicy.number" placeholder="请输入保险保单号"></el-input>
             </el-form-item>
-            <el-form-item label="投保使用证件号"  prop="compulsoryinsurancepolicy.useLicenceNumber">
-              <el-input v-model="dataForm.compulsoryinsurancepolicy.useLicenceNumber" placeholder="请输入投保使用证件号"></el-input>
+            <el-form-item label="投保使用证件号" prop="compulsoryinsurancepolicy.useLicenceNumber">
+              <el-input v-model="dataForm.compulsoryinsurancepolicy.useLicenceNumber"
+                        placeholder="请输入投保使用证件号"></el-input>
             </el-form-item>
-            <el-form-item label="交强险到期日期"  prop="compulsoryinsurancepolicy.dueDate">
+            <el-form-item label="交强险到期日期" prop="compulsoryinsurancepolicy.dueDate">
               <el-date-picker v-model="dataForm.compulsoryinsurancepolicy.dueDate"
                               type="date"
                               placeholder="请选择交强险到期日期"
                               value-format="yyyy-MM-dd"
-                              :picker-options="pickerOptions2">
+                              :picker-options="this.$MyComm.pickerOptionsAfter">
               </el-date-picker>
             </el-form-item>
           </el-col>
@@ -278,8 +292,13 @@
       </el-card>
 
 
-      <el-form-item label="配置信息" prop="collocation">
-        <el-input v-model="dataForm.collocation" placeholder="配置信息"></el-input>
+      <el-form-item label="配置信息" prop="collocation" >
+
+        <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+        <div style="margin: 15px 0;"></div>
+        <el-checkbox-group v-model="dataForm.collocation" @change="handleCheckedCitiesChange">
+          <el-checkbox v-for="city in cities" :label="city" :key="city">{{ city }}</el-checkbox>
+        </el-checkbox-group>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -290,34 +309,21 @@
 </template>
 
 <script>
+const cityOptions = ['倒车雷达', '倒车影像', '车载GPS', '车载Wifi', '行车记录仪', '雪地胎', '真皮座椅', '车载加湿器', '制氧机', '小冰箱']
 export default {
   data () {
     return {
-
-      pickerOptions2: {
-        disabledDate (time) {
-          return time.getTime() < Date.now()
-        }
-
-      },
-
-      pickerOptions: {
-        disabledDate (time) {
-          return time.getTime() > Date.now()
-        },
-        shortcuts: [{
-          text: '今天',
-          onClick (picker) {
-            picker.$emit('pick', new Date())
-          }
-        }]
-      },
+      checkAll: false,
+      cities: cityOptions,
+      isIndeterminate: true,
       uploadImgUrl: '',
+      vehicleList: [],
       visible: false,
       dataForm: {
         id: 0,
         carlicencenum: '',
         vehicle: '',
+        vehicleId: '',
         framenum: '',
         enginenum: '',
         store: '',
@@ -455,10 +461,23 @@ export default {
       }
     }
   },
+
   methods: {
-    init (id) {
-      this.uploadImgUrl = this.$http.adornUrl(`/sys/oss/upload?token=${this.$cookie.get('token')}`)
+    handleCheckAllChange (val) {
+      this.dataForm.collocation = val ? cityOptions : []
+      this.isIndeterminate = false
+    },
+    handleCheckedCitiesChange (value) {
+      let checkedCount = value.length
+      this.checkAll = checkedCount === this.cities.length
+      this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length
+    },
+    async init (id) {
+      this.uploadImgUrl = this.$MyComm.getImgUploadUrl()
       this.dataForm.id = id || 0
+      if (this.dataForm.id === 0) {
+        this.vehicleList = await this.$MyComm.getVehicleList()
+      }
       this.visible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].resetFields()
@@ -471,6 +490,7 @@ export default {
             if (data && data.code === 0) {
               this.dataForm.carlicencenum = data.car.carlicencenum
               this.dataForm.vehicle = data.car.vehicle
+              this.dataForm.vehicleId = data.car.vehicleid
               this.dataForm.framenum = data.car.framenum
               this.dataForm.enginenum = data.car.enginenum
               this.dataForm.store = data.car.store
@@ -482,12 +502,11 @@ export default {
               this.dataForm.reviewstate = data.car.reviewstate
               this.dataForm.color = data.car.color
               this.dataForm.source = data.car.source
-
-              this.dataForm.drivinglicense = JSON.parse(data.car.drivinglicense)
-              this.dataForm.annualinspectioncertificate = JSON.parse(data.car.annualinspectioncertificate)
-              this.dataForm.commercialinsurancepolicy = JSON.parse(data.car.commercialinsurancepolicy)
-              this.dataForm.compulsoryinsurancepolicy = JSON.parse(data.car.compulsoryinsurancepolicy)
-              this.dataForm.collocation = data.car.collocation
+              this.dataForm.drivinglicense = data.car.drivinglicense
+              this.dataForm.annualinspectioncertificate = data.car.annualinspectioncertificate
+              this.dataForm.commercialinsurancepolicy = data.car.commercialinsurancepolicy
+              this.dataForm.compulsoryinsurancepolicy = data.car.compulsoryinsurancepolicy
+              this.dataForm.collocation = data.car.collocation.split(',')
             }
           })
         }
@@ -535,8 +554,6 @@ export default {
         if (valid) {
           // 设置保养公里
           this.dataForm.remainmileage = parseInt(this.dataForm.currentmileage) + 5000
-
-          console.log(this.dataForm)
           this.$http({
             url: this.$http.adornUrl(`/generator/car/${!this.dataForm.id ? 'save' : 'update'}`),
             method: 'post',
@@ -544,6 +561,7 @@ export default {
               'id': this.dataForm.id || undefined,
               'carlicencenum': this.dataForm.carlicencenum,
               'vehicle': this.dataForm.vehicle,
+              'vehicleid': this.dataForm.vehicleId,
               'framenum': this.dataForm.framenum,
               'enginenum': this.dataForm.enginenum,
               'store': this.dataForm.store,
@@ -555,11 +573,11 @@ export default {
               'reviewstate': this.dataForm.reviewstate,
               'color': this.dataForm.color,
               'source': this.dataForm.source,
-              'drivinglicense': JSON.stringify(this.dataForm.drivinglicense),
-              'annualinspectioncertificate': JSON.stringify(this.dataForm.annualinspectioncertificate),
-              'commercialinsurancepolicy': JSON.stringify(this.dataForm.commercialinsurancepolicy),
-              'compulsoryinsurancepolicy': JSON.stringify(this.dataForm.compulsoryinsurancepolicy),
-              'collocation': this.dataForm.collocation
+              'drivinglicense': this.dataForm.drivinglicense,
+              'annualinspectioncertificate': this.dataForm.annualinspectioncertificate,
+              'commercialinsurancepolicy': this.dataForm.commercialinsurancepolicy,
+              'compulsoryinsurancepolicy': this.dataForm.compulsoryinsurancepolicy,
+              'collocation': this.dataForm.collocation.join(',') // 数组转字符串,逗号间隔传给后端
             })
           }).then(({data}) => {
             if (data && data.code === 0) {
@@ -583,7 +601,7 @@ export default {
 }
 </script>
 
-<style>
+<style >
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;
@@ -610,14 +628,21 @@ export default {
   height: 178px;
   display: block;
 }
-.el-radio .el-radio__label{
 
-  margin-left:-8px;
+.el-radio .el-radio__label {
+
+  margin-left: -8px;
 }
-.spanColor{
-  width:16px;
-  height:10px;
-  margin-right:12px;
+
+el-form-item__content{
+  margin-bottom: 22px;
+
+}
+
+.spanColor {
+  width: 16px;
+  height: 10px;
+  margin-right: 12px;
   display: inline-block;
 
 }

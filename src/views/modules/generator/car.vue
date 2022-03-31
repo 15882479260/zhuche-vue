@@ -16,11 +16,11 @@
       </el-form-item>
     </el-form>
 
-    <el-tabs type="border-card" @tab-click="handleCarTabsClick">
-      <el-tab-pane  label="全部">车辆总数{{dataList.length}}辆</el-tab-pane>
-      <el-tab-pane label="待年检">待年检车{{dataList.length}}辆</el-tab-pane>
-      <el-tab-pane label="待续保">待续保车{{dataList.length}}辆</el-tab-pane>
-      <el-tab-pane label="待保养">待保养车{{dataList.length}}辆</el-tab-pane>
+    <el-tabs type="border-card" v-model="dataForm.group" @tab-click="handleCarTabsClick">
+      <el-tab-pane label="全部">车辆总数{{ dataList.length }}辆</el-tab-pane>
+      <el-tab-pane label="待年检">待年检车{{ dataList.length }}辆</el-tab-pane>
+      <el-tab-pane label="待续保">待续保车{{ dataList.length }}辆</el-tab-pane>
+      <el-tab-pane label="待保养">待保养车{{ dataList.length }}辆</el-tab-pane>
     </el-tabs>
 
     <el-table
@@ -43,7 +43,7 @@
         label="车牌/车型">
         <template slot-scope="scope">
 
-          <el-tag >{{ scope.row.carlicencenum }}</el-tag>
+          <el-tag>{{ scope.row.carlicencenum }}</el-tag>
           <p style="font-size:18px;font-weight:bold">{{ scope.row.vehicle }}</p>
           <p>车架号{{ scope.row.framenum }}</p>
           <p>发动机号{{ scope.row.enginenum }}</p>
@@ -65,7 +65,7 @@
         label="运营状态">
 
         <template slot-scope="scope">
-          <el-tag  type="danger">{{ scope.row.carcurrentstatus }}</el-tag>
+          <el-tag type="danger">{{ scope.row.carcurrentstatus }}</el-tag>
           <p>{{ scope.row.reviewstate }}</p>
         </template>
 
@@ -78,8 +78,8 @@
         align="center"
         label="到期提醒天数">
         <template slot-scope="scope">
-
-          <p style="font-size:20px;font-weight:bold;color:orange">剩余{{ scope.row.insuranceday }}天续保</p>
+          <p v-if="scope.row.insuranceday!=''" style="font-size:20px;font-weight:bold;color:orange">
+            剩余{{ scope.row.insuranceday }}天续保</p>
         </template>
       </el-table-column>
       <el-table-column
@@ -139,7 +139,8 @@ export default {
   data () {
     return {
       dataForm: {
-        key: ''
+        key: '',
+        group: ''
       },
       dataList: [],
       pageIndex: 1,
@@ -157,6 +158,7 @@ export default {
     this.getDataList()
   },
   methods: {
+
     // 获取数据列表
     getDataList () {
       this.dataListLoading = true
@@ -166,7 +168,8 @@ export default {
         params: this.$http.adornParams({
           'page': this.pageIndex,
           'limit': this.pageSize,
-          'key': this.dataForm.key
+          'key': this.dataForm.key,
+          'group': this.dataForm.group
         })
       }).then(({data}) => {
         if (data && data.code === 0) {
@@ -180,32 +183,9 @@ export default {
       })
     },
 
-    handleCarTabsClick (tab) {
-      if (tab.label === '待年检') {
-        this.dataListLoading = true
-        this.$http({
-          url: this.$http.adornUrl('/generator/car/inspectionList'),
-          method: 'get',
-          params: this.$http.adornParams({
-            'page': this.pageIndex,
-            'limit': this.pageSize
-          })
-
-        }).then(({data}) => {
-          if (data && data.code === 0) {
-            this.dataList = data.page.list
-            this.totalPage = data.page.totalCount
-          } else {
-            this.dataList = []
-            this.totalPage = 0
-          }
-          this.dataListLoading = false
-        })
-      } else {
-        this.getDataList()
-      }
+    handleCarTabsClick () {
+      this.getDataList()
     },
-
     // 每页数
     sizeChangeHandle (val) {
       this.pageSize = val
