@@ -10,25 +10,15 @@
           <el-radio label="手动"></el-radio>
         </el-radio-group>
       </el-form-item>
-    <el-form-item label="车型排量" prop="displacement">
-      <el-radio-group v-model="dataForm.displacement" placeholder="">
-        <el-radio label="1.0L及以下"></el-radio>
-        <el-radio label="1.1L~2.0L"></el-radio>
-        <el-radio label="2.1L~3.0L"></el-radio>
-        <el-radio label="3.1L~4.0L"></el-radio>
-        <el-radio label="4.0L以上"></el-radio>
-      </el-radio-group>
-
+    <el-form-item label="车排量" prop="displacement">
+        <el-input v-model="dataForm.displacement" placeholder="车排量"></el-input>
     </el-form-item>
-      <el-form-item label="乘客座位数" prop="passengernum">
-        <el-radio-group v-model="dataForm.passengernum" placeholder="">
-          <el-radio label="2座及以下"></el-radio>
-          <el-radio label="3座"></el-radio>
-          <el-radio label="4座"></el-radio>
-          <el-radio label="5座"></el-radio>
-          <el-radio label="6座以上"></el-radio>
-        </el-radio-group>
+      <el-form-item label="乘座数" prop="passengernum" :rules="[
+      { required: true, message: '乘座数不能为空'},
+      { type: 'number', message: '乘座数必须为数字值'}
+    ]">
 
+        <el-input type="passengernum" v-model.number="dataForm.passengernum" placeholder="乘座数" autocomplete="off" ></el-input>
       </el-form-item>
       <el-form-item label="车型箱式" prop="carriagedesc">
         <el-radio-group v-model="dataForm.carriagedesc" placeholder="">
@@ -41,6 +31,8 @@
           <el-radio label="掀背"></el-radio>
           <el-radio label="房车"></el-radio>
           <el-radio label="皮卡"></el-radio>
+          <el-radio label="敞篷"></el-radio>
+          <el-radio label="其他"></el-radio>
         </el-radio-group>
 
       </el-form-item>
@@ -114,10 +106,6 @@
           transmissiontype: [
             { required: true, message: '不能为空', trigger: 'blur' }
           ],
-          passengernum: [
-            { required: true, message: '不能为空', trigger: 'blur' }
-          ],
-
           vehiclename: [
             { required: true, message: '不能为空', trigger: 'blur' }
           ]
@@ -205,10 +193,14 @@
   }
 </script>
 <style >
+
+
 .el-form-item__content{
   margin-bottom: 22px;
 
 }
+
+
 
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;

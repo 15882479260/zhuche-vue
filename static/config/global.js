@@ -5,6 +5,23 @@ let MyComm = new Vue({
     getImgUploadUrl () {
       return this.$http.adornUrl(`/sys/oss/upload?token=${this.$cookie.get('token')}`)
     },
+
+    async  getCarBrandList () {
+      let resultData = []
+      const res = await this.$http({
+        url: this.$http.adornUrl('/generator/carbrand/list'),
+        method: 'get',
+        params: this.$http.adornParams({
+          'page': 1,
+          'limit': 500
+        })
+      })
+      if (res.data && res.data.code === 0) {
+        resultData = res.data.page.list
+      }
+      return resultData
+    },
+
     async  getVehicleList () {
       let resultData = []
       const res = await this.$http({

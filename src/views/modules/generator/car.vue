@@ -44,7 +44,7 @@
         <template slot-scope="scope">
 
           <el-tag>{{ scope.row.carlicencenum }}</el-tag>
-          <p style="font-size:18px;font-weight:bold">{{ scope.row.vehicle }}</p>
+          <p style="font-size:18px;font-weight:bold">{{ scope.row.vehicle.vehiclename }}</p>
           <p>车架号{{ scope.row.framenum }}</p>
           <p>发动机号{{ scope.row.enginenum }}</p>
 

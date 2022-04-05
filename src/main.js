@@ -13,6 +13,9 @@ import cloneDeep from 'lodash/cloneDeep'
 
 import MyComm from '../static/config/global'
 
+import ElementUI from 'element-ui'
+Vue.use(ElementUI)
+
 Vue.use(VueCookie)
 Vue.config.productionTip = false
 

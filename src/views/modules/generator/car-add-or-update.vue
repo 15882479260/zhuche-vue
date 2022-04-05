@@ -2,8 +2,11 @@
   <el-dialog
     :title="!dataForm.id ? '新增' : '修改'"
     :close-on-click-modal="false"
-    :visible.sync="visible">
-    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()"
+    :visible.sync="visible"
+    :modal-append-to-body="false"
+
+  >
+    <el-form :model="dataForm" :rules="dataRule"  ref="dataForm" @keyup.enter.native="dataFormSubmit()"
              label-width="auto">
 
       <el-form-item label="归属门店" prop="store">
@@ -29,9 +32,9 @@
           <el-radio label="红色"></el-radio>
           <span class="spanColor" style="background-color:#ff0000;"></span>
           <el-radio label="太灰色"></el-radio>
-          <span class="spanColor" style="background-color:#d8d8d8; "></span>
+          <span class="spanColor" style="background-color:#d8d8d8;"></span>
           <el-radio label="黄色"></el-radio>
-          <span class="spanColor" style="background-color:#ffe24d; "></span>
+          <span class="spanColor" style="background-color:#ffe24d;"></span>
           <el-radio label="蓝色"></el-radio>
           <span class="spanColor" style="background-color:#1557ff;"></span>
           <el-radio label="紫色"></el-radio>
@@ -99,13 +102,17 @@
             </el-form-item>
 
             <el-form-item label="车型" prop="vehicle">
-              <el-select v-model="dataForm.vehicleId" placeholder="请选择车型">
+              <el-select v-model="dataForm.vehicle"  value-key="vehiclename" placeholder="请选择车型" >
                 <el-option
                   v-for="item in vehicleList"
                   :key="item.id"
                   :label="item.vehiclename"
-                  :value="item.id">
+                  :value="{
+                      id: item.id,
+                      vehiclename: item.vehiclename,
+                    }">
                 </el-option>
+                <el-button type="text"  @click="searchVehicle">查找更多车型</el-button>
               </el-select>
 
             </el-form-item>
@@ -177,7 +184,7 @@
           </el-col>
 
           <el-col :span="15">
-            <el-form-item label="年检到期日期" prop="annualinspectioncertificate.dueDate">
+            <el-form-item label="年检到期日期" prop="annualinspectioncertificate.dueDate" >
               <el-date-picker v-model="dataForm.annualinspectioncertificate.dueDate"
                               type="date"
                               placeholder="请选择年检到期日期"
@@ -295,7 +302,6 @@
       <el-form-item label="配置信息" prop="collocation" >
 
         <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-        <div style="margin: 15px 0;"></div>
         <el-checkbox-group v-model="dataForm.collocation" @change="handleCheckedCitiesChange">
           <el-checkbox v-for="city in cities" :label="city" :key="city">{{ city }}</el-checkbox>
         </el-checkbox-group>
@@ -322,8 +328,7 @@ export default {
       dataForm: {
         id: 0,
         carlicencenum: '',
-        vehicle: '',
-        vehicleId: '',
+        vehicle: {},
         framenum: '',
         enginenum: '',
         store: '',
@@ -461,8 +466,30 @@ export default {
       }
     }
   },
-
+  activated () {
+    let vehicle = JSON.parse(localStorage.getItem('vehicle-search'))
+    if (vehicle && this.visible) {
+      this.dataForm.vehicle = vehicle
+      this.addVehicleToSelect(vehicle)
+      localStorage.removeItem('vehicle-search')
+    }
+  },
   methods: {
+  // 如果对象数组不包含该对象，就添加该对象.....是因为数组没有这个对象时，el-select不会显示这个对象
+    addVehicleToSelect (vehicle) {
+      let result = this.vehicleList.some(item => {
+        if (item.vehiclename === vehicle.vehiclename) {
+          return true
+        }
+      })
+      if (!result) {
+        this.vehicleList.push(vehicle)
+      }
+    },
+
+    searchVehicle () {
+      this.$router.push({ name: 'generator-vehicle-search' })
+    },
     handleCheckAllChange (val) {
       this.dataForm.collocation = val ? cityOptions : []
       this.isIndeterminate = false
@@ -474,10 +501,8 @@ export default {
     },
     async init (id) {
       this.uploadImgUrl = this.$MyComm.getImgUploadUrl()
+      this.vehicleList = await this.$MyComm.getVehicleList()
       this.dataForm.id = id || 0
-      if (this.dataForm.id === 0) {
-        this.vehicleList = await this.$MyComm.getVehicleList()
-      }
       this.visible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].resetFields()
@@ -490,7 +515,7 @@ export default {
             if (data && data.code === 0) {
               this.dataForm.carlicencenum = data.car.carlicencenum
               this.dataForm.vehicle = data.car.vehicle
-              this.dataForm.vehicleId = data.car.vehicleid
+              this.addVehicleToSelect(data.car.vehicle)
               this.dataForm.framenum = data.car.framenum
               this.dataForm.enginenum = data.car.enginenum
               this.dataForm.store = data.car.store
@@ -506,7 +531,7 @@ export default {
               this.dataForm.annualinspectioncertificate = data.car.annualinspectioncertificate
               this.dataForm.commercialinsurancepolicy = data.car.commercialinsurancepolicy
               this.dataForm.compulsoryinsurancepolicy = data.car.compulsoryinsurancepolicy
-              this.dataForm.collocation = data.car.collocation.split(',')
+              this.dataForm.collocation = data.car.collocation
             }
           })
         }
@@ -561,7 +586,6 @@ export default {
               'id': this.dataForm.id || undefined,
               'carlicencenum': this.dataForm.carlicencenum,
               'vehicle': this.dataForm.vehicle,
-              'vehicleid': this.dataForm.vehicleId,
               'framenum': this.dataForm.framenum,
               'enginenum': this.dataForm.enginenum,
               'store': this.dataForm.store,
@@ -577,7 +601,7 @@ export default {
               'annualinspectioncertificate': this.dataForm.annualinspectioncertificate,
               'commercialinsurancepolicy': this.dataForm.commercialinsurancepolicy,
               'compulsoryinsurancepolicy': this.dataForm.compulsoryinsurancepolicy,
-              'collocation': this.dataForm.collocation.join(',') // 数组转字符串,逗号间隔传给后端
+              'collocation': this.dataForm.collocation // 数组转字符串,逗号间隔传给后端
             })
           }).then(({data}) => {
             if (data && data.code === 0) {
