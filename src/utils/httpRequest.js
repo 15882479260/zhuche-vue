@@ -18,6 +18,12 @@ const http = axios.create({
  */
 http.interceptors.request.use(config => {
   config.headers['token'] = Vue.cookie.get('token') // 请求头带上token
+  if (config.method === 'get') {
+    config.paramsSerializer = function (params) {
+      return qs.stringify(params, {arrayFormat: 'indices'})
+    }
+  }
+
   return config
 }, error => {
   return Promise.reject(error)

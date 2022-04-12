@@ -16,7 +16,7 @@
 
       <el-col :span="21">
       <el-scrollbar style="height:500px">
-      <el-tree :data="carBrandList"  :accordion=true ref="carBrand"></el-tree>
+      <el-tree :data="carBrandList"  :accordion=true ref="carBrand" @node-click="handleNodeClick"></el-tree>
       </el-scrollbar>
       </el-col>
     </el-col>
@@ -57,6 +57,7 @@
               :value="item">
             </el-option>
           </el-select>
+          <el-button @click="getDataList()">查询</el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -186,9 +187,13 @@ export default {
       dataListLoading: false
     }
   },
-
   methods: {
-
+    handleNodeClick (data) {
+      console.log(data)
+      if (data.seriesName) {
+        this.dataForm.vehiclename = data.seriesName
+      }
+    },
     chooseVehicleHandle (val) {
       localStorage.setItem('vehicle-search', JSON.stringify(val))
       this.$router.go(-1)
@@ -212,7 +217,8 @@ export default {
         method: 'get',
         params: this.$http.adornParams({
           'page': this.pageIndex,
-          'limit': this.pageSize
+          'limit': this.pageSize,
+          'dataform': this.dataForm
         })
       }).then(({data}) => {
         if (data && data.code === 0) {
@@ -295,7 +301,6 @@ export default {
       this.carBrandList.push(item)
     })
   }
-
 }
 </script>
 <style >

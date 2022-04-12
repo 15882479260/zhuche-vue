@@ -95,16 +95,15 @@
         label="下次保养公里数">
       </el-table-column>
       <el-table-column
-        prop="carmodelimg"
+        prop="vehicle"
         header-align="center"
         align="center"
         label="车型图片">
         <template slot-scope="scope">
-          <img :src="scope.row.carModelImg" style="width:100px;height:100px;"/>
+          <img :src="scope.row.vehicle.imageurl" style="width:100px;height:100px;"/>
         </template>
 
       </el-table-column>
-
 
       <el-table-column
         fixed="right"

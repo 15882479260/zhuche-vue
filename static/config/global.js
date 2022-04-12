@@ -33,27 +33,27 @@ let MyComm = new Vue({
         resultData = res.data.page.list
       }
       return resultData
-    },
-    data () {
-      return {
-        pickerOptionsAfter: {
-          disabledDate (time) {
-            return time.getTime() < Date.now()
-          }
-
-        },
-
-        pickerOptionsBefor: {
-          disabledDate (time) {
-            return time.getTime() > Date.now()
-          },
-          shortcuts: [{
-            text: '今天',
-            onClick (picker) {
-              picker.$emit('pick', new Date())
-            }
-          }]
+    }
+  },
+  data () {
+    return {
+      pickerOptionsAfter: {
+        disabledDate (time) {
+          return time.getTime() < Date.now()
         }
+
+      },
+
+      pickerOptionsBefor: {
+        disabledDate (time) {
+          return time.getTime() > Date.now()
+        },
+        shortcuts: [{
+          text: '今天',
+          onClick (picker) {
+            picker.$emit('pick', new Date())
+          }
+        }]
       }
     }
   }

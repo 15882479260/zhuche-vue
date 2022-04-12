@@ -70,7 +70,6 @@
       <el-form-item label="车辆来源" prop="source">
 
         <el-radio-group v-model="dataForm.source" placeholder="车辆来源">
-
           <el-radio label="全资购买"></el-radio>
           <el-radio label="融资租赁"></el-radio>
           <el-radio label="租赁"></el-radio>
@@ -110,6 +109,7 @@
                   :value="{
                       id: item.id,
                       vehiclename: item.vehiclename,
+                      imageurl:item.imageurl
                     }">
                 </el-option>
                 <el-button type="text"  @click="searchVehicle">查找更多车型</el-button>
@@ -319,6 +319,7 @@ const cityOptions = ['倒车雷达', '倒车影像', '车载GPS', '车载Wifi', 
 export default {
   data () {
     return {
+
       checkAll: false,
       cities: cityOptions,
       isIndeterminate: true,
@@ -332,12 +333,11 @@ export default {
         framenum: '',
         enginenum: '',
         store: '',
-        carModelImg: '',
-        carcurrentstatus: '',
+        carcurrentstatus: '经营中',
         insuranceday: '',
         currentmileage: '',
         remainmileage: '',
-        reviewstate: '',
+        reviewstate: '审核通过',
         color: '',
         source: '',
         drivinglicense: {
@@ -523,7 +523,6 @@ export default {
               this.dataForm.insuranceday = data.car.insuranceday
               this.dataForm.currentmileage = data.car.currentmileage
               this.dataForm.remainmileage = data.car.remainmileage
-              this.dataForm.carModelImg = data.car.carModelImg
               this.dataForm.reviewstate = data.car.reviewstate
               this.dataForm.color = data.car.color
               this.dataForm.source = data.car.source
@@ -593,7 +592,6 @@ export default {
               'insuranceday': this.dataForm.insuranceday,
               'currentmileage': this.dataForm.currentmileage,
               'remainmileage': this.dataForm.remainmileage,
-              'carModelImg': this.dataForm.carModelImg,
               'reviewstate': this.dataForm.reviewstate,
               'color': this.dataForm.color,
               'source': this.dataForm.source,
