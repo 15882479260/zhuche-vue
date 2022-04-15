@@ -486,7 +486,7 @@ export default {
     },
 
     searchVehicle () {
-      this.$router.push({name: 'generator-vehicle-search'})
+      this.$router.push({name: 'generator-vehicle-search', params: {disabled: true}})
     },
     handleCheckAllChange (val) {
       this.dataForm.collocation = val ? cityOptions : []

@@ -65,6 +65,23 @@
         prop="baseorder"
         header-align="center"
         align="center"
+        label="续租取还车时间">
+        <template slot-scope="scope">
+          <el-row v-if="scope.row.baseorder.BookingPickOffTime">
+            <el-tag size="mini">续租起始时间</el-tag>
+            <span style="font-size:18px;font-weight:bold">{{ scope.row.baseorder.BookingPickupTime }}</span><br/>
+            <el-tag size="mini">续租预还时间</el-tag>
+            <span style="font-size:18px;font-weight:bold">{{ scope.row.baseorder.BookingPickOffTime }}</span>
+          </el-row>
+          <el-row v-else>
+            <span style="font-size:18px;font-weight:bold">未续租</span><br/>
+          </el-row>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="baseorder"
+        header-align="center"
+        align="center"
         label="租期">
         <template slot-scope="scope">
 
@@ -117,8 +134,8 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
-           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
-          <!-- <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>-->
+          <!--  <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
+              <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>-->
           <el-row>
             <el-button type="warning" style="margin-bottom: 10px" size="small" @click="addDriver(scope.row)">排司机</el-button>
           </el-row>
@@ -127,7 +144,10 @@
             <el-button v-if="scope.row.baseorder.status==='已排车'"   type="warning" style="margin-bottom: 10px" size="small" @click="giveCar(scope.row)">取车</el-button>
           </el-row>
           <el-row>
-            <el-button v-if="scope.row.baseorder.status==='已取车'" type="warning" style="margin-bottom: 10px" size="small" @click="returnCar(scope.row)">还车</el-button>
+            <el-button v-if="scope.row.baseorder.status==='已取车'||scope.row.baseorder.status==='已续租'" type="warning" style="margin-bottom: 10px" size="small" @click="returnCar(scope.row)">还车</el-button>
+          </el-row>
+          <el-row>
+            <el-button type="warning" style="margin-bottom: 10px" size="small" @click="renewCar(scope.row)">续租</el-button>
           </el-row>
         </template>
       </el-table-column>
@@ -146,6 +166,7 @@
     <add-driver v-if="addDriverVisible" ref="addDriver" @refreshDataList="getDataList"></add-driver>
     <give-car v-if="giveCarVisible" ref="giveCar" @refreshDataList="getDataList"></give-car>
     <return-car v-if="returnCarVisible" ref="returnCar" @refreshDataList="getDataList"></return-car>
+    <renew  v-if="renewVisible" ref="renewCar" @refreshDataList="getDataList"></renew>
   </div>
 </template>
 
@@ -154,6 +175,7 @@ import AddOrUpdate from './order-add-or-update'
 import AddDriver from './order-add-driver'
 import GiveCar from './order-give-car'
 import ReturnCar from './order-return-car'
+import Renew from './order-renew'
 
 export default {
   data () {
@@ -170,14 +192,16 @@ export default {
       addOrUpdateVisible: false,
       addDriverVisible: false,
       giveCarVisible: false,
-      returnCarVisible: false
+      returnCarVisible: false,
+      renewVisible: false
     }
   },
   components: {
     AddOrUpdate,
     AddDriver,
     GiveCar,
-    ReturnCar
+    ReturnCar,
+    Renew
   },
   activated () {
     this.getDataList()
@@ -200,6 +224,12 @@ export default {
       this.returnCarVisible = true
       this.$nextTick(() => {
         this.$refs.returnCar.setOrder(order)
+      })
+    },
+    renewCar (order) {
+      this.renewVisible = true
+      this.$nextTick(() => {
+        this.$refs.renewCar.setOrder(order)
       })
     },
     dueDate (value) {

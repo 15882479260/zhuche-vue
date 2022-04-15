@@ -34,7 +34,7 @@
       <ol>
         <li
           v-for='item in taskList'
-          :key=item>
+          :key=item.index>
           {{ item.id }}&nbsp;&nbsp;&nbsp;&nbsp;{{item.vehiclename }}&nbsp;&nbsp;<span style="color: #aa00aa">{{ '(' +item.type+')'}}</span> &nbsp;&nbsp; {{item.datetime}}&nbsp;&nbsp;{{item.address}}
         </li>
       </ol>

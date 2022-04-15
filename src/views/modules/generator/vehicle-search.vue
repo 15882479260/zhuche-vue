@@ -131,9 +131,9 @@
         header-align="center"
         align="center"
         width="150"
-        label="操作">
-        <template slot-scope="scope">
-          <el-button type="text" size="small" @click="chooseVehicleHandle(scope.row)">使用此车型</el-button>
+        label="操作" >
+        <template slot-scope="scope"  >
+          <el-button v-if="visible" type="text" size="small" @click="chooseVehicleHandle(scope.row)">使用此车型</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -157,8 +157,10 @@ const passengerOptins = ['2座及以下', '3座', '4座', '5座', '6座以上']
 const displacementOptins = ['1.0L及以下', '1.1L~2.0L', '2.1L~3.0L', '3.1L~4.0L', '4.0L以上']
 const carriagedescOptins = ['三厢', 'MPV', 'SUV', '两厢', '客车', '跑车', '掀背', '房车', '皮卡', '敞篷', '其他']
 export default {
+
   data () {
     return {
+      visible: false,
       characters: [{'item': 'A'}, {'item': 'B'}, {'item': 'C'}, {'item': 'D'}, {'item': 'E'}, {'item': 'F'}, {'item': 'G'}, {'item': 'H'}, {'item': 'I'}, {'item': 'J'},
         {'item': 'K'}, {'item': 'L'}, {'item': 'M'}, {'item': 'N'}, {'item': 'O'}, {'item': 'P'}, {'item': 'Q'}, {'item': 'R'}, {'item': 'S'}, {'item': 'T'}, {'item': 'U'},
       {'item': 'V'}, {'item': 'W'}, {'item': 'X'}, {'item': 'Y'}, {'item': 'Z'}],
@@ -202,6 +204,7 @@ export default {
       }
     },
     chooseVehicleHandle (val) {
+      this.visible = false
       localStorage.setItem('vehicle-search', JSON.stringify(val))
       this.$router.go(-1)
     },
@@ -296,6 +299,7 @@ export default {
   },
   mounted: async function () {
     this.getDataList()
+    this.visible = this.$route.params.disabled
     // 获取车型列表
     let array = await this.$MyComm.getCarBrandList()
     array.forEach((item) => {
