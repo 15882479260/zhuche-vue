@@ -8,7 +8,7 @@
         <el-input v-model="dataForm.key" placeholder="请输入车牌号" clearable></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button @click="getDataList()">查询</el-button>
+        <el-button @click="getDataList">查询</el-button>
         <el-button v-if="isAuth('generator:car:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
         <el-button v-if="isAuth('generator:car:delete')" type="danger" @click="deleteHandle()"
                    :disabled="dataListSelections.length <= 0">批量删除
@@ -53,7 +53,7 @@
       </el-table-column>
 
       <el-table-column
-        prop="store"
+        prop="store.shopname"
         header-align="center"
         align="center"
         label="门店">
@@ -127,7 +127,7 @@
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
-    <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
+    <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList()"></add-or-update>
   </div>
 </template>
 

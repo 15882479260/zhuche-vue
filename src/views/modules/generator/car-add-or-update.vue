@@ -6,15 +6,18 @@
     :modal-append-to-body="false"
 
   >
-    <el-form :model="dataForm" :rules="dataRule"  ref="dataForm" @keyup.enter.native="dataFormSubmit()"
+    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()"
              label-width="auto">
 
       <el-form-item label="归属门店" prop="store">
 
-        <el-select v-model="dataForm.store" placeholder="请填写门店名称">
-          <el-option label="成都" value="成都"></el-option>
-          <el-option label="辽宁" value="辽宁"></el-option>
-          <el-option label="陕西" value="陕西"></el-option>
+        <el-select v-model="dataForm.store" value-key="shopname" placeholder="请填写门店名称">
+          <el-option
+            v-for="item in shopList"
+            :key="item.id"
+            :label="item.shopname"
+            :value="item">
+          </el-option>
         </el-select>
 
       </el-form-item>
@@ -69,7 +72,7 @@
 
       <el-form-item label="车辆来源" prop="source">
 
-        <el-radio-group v-model="dataForm.source" placeholder="车辆来源">
+        <el-radio-group v-model="dataForm.source" >
           <el-radio label="全资购买"></el-radio>
           <el-radio label="融资租赁"></el-radio>
           <el-radio label="租赁"></el-radio>
@@ -101,18 +104,14 @@
             </el-form-item>
 
             <el-form-item label="车型" prop="vehicle">
-              <el-select v-model="dataForm.vehicle"  value-key="vehiclename" placeholder="请选择车型" >
+              <el-select v-model="dataForm.vehicle" value-key="vehiclename" placeholder="请选择车型">
                 <el-option
                   v-for="item in vehicleList"
                   :key="item.id"
                   :label="item.vehiclename"
-                  :value="{
-                      id: item.id,
-                      vehiclename: item.vehiclename,
-                      imageurl:item.imageurl
-                    }">
+                  :value="item">
                 </el-option>
-                <el-button type="text"  @click="searchVehicle">查找更多车型</el-button>
+                <el-button type="text" @click="searchVehicle">查找更多车型</el-button>
               </el-select>
 
             </el-form-item>
@@ -184,7 +183,7 @@
           </el-col>
 
           <el-col :span="15">
-            <el-form-item label="年检到期日期" prop="annualinspectioncertificate.dueDate" >
+            <el-form-item label="年检到期日期" prop="annualinspectioncertificate.dueDate">
               <el-date-picker v-model="dataForm.annualinspectioncertificate.dueDate"
                               type="date"
                               placeholder="请选择年检到期日期"
@@ -299,7 +298,7 @@
       </el-card>
 
 
-      <el-form-item label="配置信息" prop="collocation" >
+      <el-form-item label="配置信息" prop="collocation">
 
         <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
         <el-checkbox-group v-model="dataForm.collocation" @change="handleCheckedCitiesChange">
@@ -325,6 +324,7 @@ export default {
       isIndeterminate: true,
       uploadImgUrl: '',
       vehicleList: [],
+      shopList: [],
       visible: false,
       dataForm: {
         id: 0,
@@ -334,7 +334,6 @@ export default {
         enginenum: '',
         store: '',
         carcurrentstatus: '经营中',
-        insuranceday: '',
         currentmileage: '',
         remainmileage: '',
         reviewstate: '审核通过',
@@ -347,12 +346,10 @@ export default {
           carlicencenum_0: '',
           carlicencenum_1: '',
           imgUrl: ''
-
         },
         annualinspectioncertificate: {
           dueDate: '',
           imgUrl: ''
-
         },
         commercialinsurancepolicy: {
           companyName: '',
@@ -474,8 +471,9 @@ export default {
       localStorage.removeItem('vehicle-search')
     }
   },
+
   methods: {
-  // 如果对象数组不包含该对象，就添加该对象.....是因为数组没有这个对象时，el-select不会显示这个对象
+    // 如果对象数组不包含该对象，就添加该对象.....是因为数组没有这个对象时，el-select不会显示这个对象
     addVehicleToSelect (vehicle) {
       let result = this.vehicleList.some(item => {
         if (item.vehiclename === vehicle.vehiclename) {
@@ -488,7 +486,7 @@ export default {
     },
 
     searchVehicle () {
-      this.$router.push({ name: 'generator-vehicle-search' })
+      this.$router.push({name: 'generator-vehicle-search'})
     },
     handleCheckAllChange (val) {
       this.dataForm.collocation = val ? cityOptions : []
@@ -502,6 +500,7 @@ export default {
     async init (id) {
       this.uploadImgUrl = this.$MyComm.getImgUploadUrl()
       this.vehicleList = await this.$MyComm.getVehicleList()
+      this.shopList = await this.$MyComm.getShopList()
       this.dataForm.id = id || 0
       this.visible = true
       this.$nextTick(() => {
@@ -623,7 +622,7 @@ export default {
 }
 </script>
 
-<style >
+<style>
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;
@@ -656,9 +655,8 @@ export default {
   margin-left: -8px;
 }
 
-el-form-item__content{
+.el-form-item.is-required {
   margin-bottom: 22px;
-
 }
 
 .spanColor {

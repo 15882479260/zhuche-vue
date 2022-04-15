@@ -2,54 +2,61 @@
 
   <el-row>
     <el-col :span="7">
-      <el-col :span="3">
+      <el-col :span="2">
         <el-scrollbar style="height:500px">
         <el-table class="characters" :data="characters" :show-header=false @current-change="handScrollTo" :highlight-current-row=true >
           <el-table-column
             prop="item"
-            width="20"
             >
           </el-table-column>
         </el-table>
         </el-scrollbar>
       </el-col>
 
-      <el-col :span="21">
-      <el-scrollbar style="height:500px">
-      <el-tree :data="carBrandList"  :accordion=true ref="carBrand" @node-click="handleNodeClick"></el-tree>
-      </el-scrollbar>
+      <el-col :span="22">
+        <el-scrollbar style="height:500px">
+          <el-tree :data="carBrandList" :accordion=true ref="carBrand" @node-click="handleNodeClick"></el-tree>
+        </el-scrollbar>
       </el-col>
     </el-col>
     <el-col :span="17">
-      <el-form :model="dataForm" :rules="dataRule" ref="dataForm"  label-width="auto">
+      <el-form :model="dataForm" :rules="dataRule" ref="dataForm" label-width="auto">
         <el-form-item label="排挡" prop="transmissiontype">
-          <el-checkbox :indeterminate="istransmissiontypesIndeterminate" v-model="transmissiontypesCheckAll" @change="handleCheckAllTransmissiontypeChange">全选</el-checkbox>
+          <el-checkbox :indeterminate="istransmissiontypesIndeterminate" v-model="transmissiontypesCheckAll"
+                       @change="handleCheckAllTransmissiontypeChange">全选
+          </el-checkbox>
           <el-checkbox-group v-model="dataForm.transmissiontype" @change="handleCheckedTransmissiontypesChange">
             <el-checkbox v-for="item in transmissiontypes" :label="item" :key="item">{{ item }}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="排量" prop="displacement">
-          <el-checkbox :indeterminate="isDisplacementIndeterminate" v-model="displacementsCheckAll" @change="handleCheckAlldisplacementChange">全选</el-checkbox>
+          <el-checkbox :indeterminate="isDisplacementIndeterminate" v-model="displacementsCheckAll"
+                       @change="handleCheckAlldisplacementChange">全选
+          </el-checkbox>
           <el-checkbox-group v-model="dataForm.displacement" @change="handleCheckeddisplacementChange">
             <el-checkbox v-for="item in displacements" :label="item" :key="item">{{ item }}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="乘座数" prop="passengernum">
-          <el-checkbox :indeterminate="isPassengerIndeterminate" v-model="passengersCheckAll" @change="handleCheckAllPassengerChange">全选</el-checkbox>
+          <el-checkbox :indeterminate="isPassengerIndeterminate" v-model="passengersCheckAll"
+                       @change="handleCheckAllPassengerChange">全选
+          </el-checkbox>
           <el-checkbox-group v-model="dataForm.passengernum" @change="handleCheckedPassengersChange">
             <el-checkbox v-for="item in passengers" :label="item" :key="item">{{ item }}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="车型箱式" prop="carriagedesc">
 
-          <el-checkbox :indeterminate="isCarriagedescsIndeterminate" v-model="carriagedescsCheckAll" @change="handleCheckAllcarriagedescChange">全选</el-checkbox>
+          <el-checkbox :indeterminate="isCarriagedescsIndeterminate" v-model="carriagedescsCheckAll"
+                       @change="handleCheckAllcarriagedescChange">全选
+          </el-checkbox>
           <el-checkbox-group v-model="dataForm.carriagedesc" @change="handleCheckedcarriagedescChange">
             <el-checkbox v-for="item in carriagedescs" :label="item" :key="item">{{ item }}</el-checkbox>
           </el-checkbox-group>
 
         </el-form-item>
         <el-form-item label="车型年款" prop="modelyear">
-          <el-select v-model="dataForm.modelyear" placeholder="">
+          <el-select v-model="dataForm.modelyear" >
             <el-option
               v-for="item in modelYearOptions"
               :key="item"
@@ -57,7 +64,7 @@
               :value="item">
             </el-option>
           </el-select>
-          <el-button @click="getDataList()">查询</el-button>
+          <el-button @click="getDataList">查询</el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -152,7 +159,9 @@ const carriagedescOptins = ['三厢', 'MPV', 'SUV', '两厢', '客车', '跑车'
 export default {
   data () {
     return {
-      characters: [{item: 'A'}, {item: 'B'}, {item: 'C'}, {item: 'D'}, {item: 'E'}, {item: 'F'}, {item: 'G'}, {item: 'H'}, {item: 'I'}, {item: 'J'}, {item: 'K'}, {item: 'L'}, {item: 'M'}, {item: 'N'}, {item: 'O'}, {item: 'P'}, {item: 'Q'}, {item: 'R'}, {item: 'S'}, {item: 'T'}, {item: 'U'}, {item: 'V'}, {item: 'W'}, {item: 'X'}, {item: 'Y'}, {item: 'Z'}],
+      characters: [{'item': 'A'}, {'item': 'B'}, {'item': 'C'}, {'item': 'D'}, {'item': 'E'}, {'item': 'F'}, {'item': 'G'}, {'item': 'H'}, {'item': 'I'}, {'item': 'J'},
+        {'item': 'K'}, {'item': 'L'}, {'item': 'M'}, {'item': 'N'}, {'item': 'O'}, {'item': 'P'}, {'item': 'Q'}, {'item': 'R'}, {'item': 'S'}, {'item': 'T'}, {'item': 'U'},
+      {'item': 'V'}, {'item': 'W'}, {'item': 'X'}, {'item': 'Y'}, {'item': 'Z'}],
       carBrandList: [],
       passengersCheckAll: false,
       isPassengerIndeterminate: true,
@@ -169,7 +178,7 @@ export default {
       carriagedescs: carriagedescOptins,
       //
       modelYearOptions: ['全部', '2022款', '2021款', '2020款', '2019款', '2018款', '2017款', '2016款', '2015款', '2014款', '2013款', '2012款',
-        '2011款', '2010款', '2009款', '2008款', '2007款', '2006款', '2005前款' ],
+        '2011款', '2010款', '2009款', '2008款', '2007款', '2006款', '2005前款'],
       dataForm: {
         vehiclename: '',
         displacement: [],
@@ -178,8 +187,7 @@ export default {
         transmissiontype: [],
         passengernum: []
       },
-      dataRule: {
-      },
+      dataRule: {},
       dataList: [],
       pageIndex: 1,
       pageSize: 10,
@@ -189,7 +197,6 @@ export default {
   },
   methods: {
     handleNodeClick (data) {
-      console.log(data)
       if (data.seriesName) {
         this.dataForm.vehiclename = data.seriesName
       }
@@ -289,7 +296,6 @@ export default {
   },
   mounted: async function () {
     this.getDataList()
-
     // 获取车型列表
     let array = await this.$MyComm.getCarBrandList()
     array.forEach((item) => {
@@ -303,7 +309,7 @@ export default {
   }
 }
 </script>
-<style >
+<style>
 .characters .cell {
   line-height: 13px
 }
