@@ -56,9 +56,9 @@
         label="预计取还车时间">
         <template slot-scope="scope">
           <el-tag size="mini">预取</el-tag>
-          <span style="font-size:18px;font-weight:bold">{{ scope.row.baseorder.PickupTime }}</span><br/>
+          <span style="font-size:18px;font-weight:bold">{{ scope.row.baseorder.BookingPickupTime }}</span><br/>
           <el-tag size="mini">预还</el-tag>
-          <span style="font-size:18px;font-weight:bold">{{ scope.row.baseorder.PickoffTime }}</span>
+          <span style="font-size:18px;font-weight:bold">{{ scope.row.baseorder.PickoffTime ? scope.row.baseorder.PickoffTime :scope.row.baseorder.BookingPickoffTime }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -67,11 +67,11 @@
         align="center"
         label="续租取还车时间">
         <template slot-scope="scope">
-          <el-row v-if="scope.row.baseorder.BookingPickOffTime">
+          <el-row v-if="scope.row.baseorder.PickoffTime">
             <el-tag size="mini">续租起始时间</el-tag>
-            <span style="font-size:18px;font-weight:bold">{{ scope.row.baseorder.BookingPickupTime }}</span><br/>
+            <span style="font-size:18px;font-weight:bold">{{ scope.row.baseorder.PickupTime }}</span><br/>
             <el-tag size="mini">续租预还时间</el-tag>
-            <span style="font-size:18px;font-weight:bold">{{ scope.row.baseorder.BookingPickOffTime }}</span>
+            <span style="font-size:18px;font-weight:bold">{{ scope.row.baseorder.PickoffTime }}</span>
           </el-row>
           <el-row v-else>
             <span style="font-size:18px;font-weight:bold">未续租</span><br/>
@@ -147,7 +147,7 @@
             <el-button v-if="scope.row.baseorder.status==='已取车'||scope.row.baseorder.status==='已续租'" type="warning" style="margin-bottom: 10px" size="small" @click="returnCar(scope.row)">还车</el-button>
           </el-row>
           <el-row>
-            <el-button type="warning" style="margin-bottom: 10px" size="small" @click="renewCar(scope.row)">续租</el-button>
+            <el-button v-if="scope.row.baseorder.status==='已取车'||scope.row.baseorder.status==='已续租'||scope.row.baseorder.status==='已还车'" type="warning" style="margin-bottom: 10px" size="small" @click="renewCar(scope.row)">续租</el-button>
           </el-row>
         </template>
       </el-table-column>
@@ -233,8 +233,8 @@ export default {
       })
     },
     dueDate (value) {
-      let date1 = new Date(value.PickupTime)
-      let date2 = new Date(value.PickoffTime)
+      let date1 = new Date(value.BookingPickupTime)
+      let date2 = new Date(value.BookingPickoffTime)
       let time1 = date1.getTime()
       let time2 = date2.getTime()
       let dueDay = Math.floor((time2 - time1) / (24 * 60 * 60 * 1000))

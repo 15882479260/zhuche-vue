@@ -73,8 +73,8 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="取车时间" prop="baseorder.PickupTime">
-            <el-date-picker v-model="dataForm.baseorder.PickupTime"
+          <el-form-item label="取车时间" prop="baseorder.BookingPickupTime">
+            <el-date-picker v-model="dataForm.baseorder.BookingPickupTime"
                             type="datetime"
                             placeholder="请选择取车时间"
                             value-format="yyyy-MM-dd HH:mm"
@@ -105,8 +105,8 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="还车时间" prop="baseorder.PickoffTime">
-            <el-date-picker v-model="dataForm.baseorder.PickoffTime"
+          <el-form-item label="还车时间" prop="baseorder.BookingPickoffTime">
+            <el-date-picker v-model="dataForm.baseorder.BookingPickoffTime"
                             type="datetime"
                             placeholder="请选择还车时间"
                             value-format="yyyy-MM-dd HH:mm"
@@ -166,8 +166,8 @@ export default {
           },
           'PickoffStore': {
           },
-          'PickupTime': '2022-04-13 00:44',
-          'PickoffTime': '2022-04-20 23:59',
+          'BookingPickupTime': '2022-04-13 00:44',
+          'BookingPickoffTime': '2022-04-20 23:59',
           'PickUpType': '上门取还',
           'PickOffType': '上门取还',
           'VbkChannal': '门店下单',
@@ -200,7 +200,7 @@ export default {
         'baseorder.PickupStore': [
           {required: true, message: '租车门店不能为空', trigger: 'blur'}
         ],
-        'baseorder.PickupTime': [
+        'baseorder.BookingPickupTime': [
           {required: true, message: '租车时间不能为空', trigger: 'blur'}
         ],
         'baseorder.PickUpType': [
@@ -213,7 +213,7 @@ export default {
         'baseorder.PickoffStore': [
           {required: true, message: '还车门店不能为空', trigger: 'blur'}
         ],
-        'baseorder.PickoffTime': [
+        'baseorder.BookingPickoffTime': [
           {required: true, message: '还车时间不能为空', trigger: 'blur'}
         ],
         'baseorder.PickOffType': [

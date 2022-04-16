@@ -16,7 +16,7 @@
           :value="item">
         </el-option>
       </el-select>
-      <P v-if="group==='0'">当前订单送车时间：<span style="color: #aa00aa">{{ order.baseorder.PickupTime }}</span>&nbsp;&nbsp;&nbsp;&nbsp;送车地址：<span
+      <P v-if="group==='0'">当前订单送车时间：<span style="color: #aa00aa">{{ order.baseorder.BookingPickupTime }}</span>&nbsp;&nbsp;&nbsp;&nbsp;送车地址：<span
         style="color: #aa00aa">{{ order.baseorder.PickupStore.shopaddress }}</span></P>
 
       <span v-if="group==='1'" style="color: #aa00aa">收车司机：</span>
@@ -28,7 +28,7 @@
           :value="item">
         </el-option>
       </el-select>
-      <P v-if="group==='1'">当前订单收车时间：<span style="color: #aa00aa">{{ order.baseorder.PickoffTime }}</span>&nbsp;&nbsp;&nbsp;&nbsp;收车地址：<span
+      <P v-if="group==='1'">当前订单收车时间：<span style="color: #aa00aa">{{ order.baseorder.BookingPickoffTime }}</span>&nbsp;&nbsp;&nbsp;&nbsp;收车地址：<span
         style="color: #aa00aa">{{ order.baseorder.PickoffStore.shopaddress }}</span></P>
       <p style="color: #aa00aa;font-size: large">任务列表：</p>
       <ol>
@@ -90,7 +90,7 @@ export default {
         data: this.$http.adornData({
           'vehiclename': this.order.cardetail.vehicle.vehiclename,
           'type': this.group === '0' ? '送车' : '收车',
-          'datetime': this.group === '0' ? this.order.baseorder.PickupTime : this.order.baseorder.PickoffTime,
+          'datetime': this.group === '0' ? this.order.baseorder.BookingPickupTime : this.order.baseorder.PickoffTime ? this.order.baseorder.PickoffTime : this.order.baseorder.BookingPickoffTime,
           'address': this.group === '0' ? this.order.baseorder.PickupStore.shopaddress : this.order.baseorder.PickoffStore.shopaddress,
           'driverid': this.group === '0' ? this.order.pickupdriverinfo.id : this.order.pickoffdriverinfo.id
         })

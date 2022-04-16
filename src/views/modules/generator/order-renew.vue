@@ -48,7 +48,7 @@ export default {
     },
     // 表单提交
     dataFormSubmit () {
-      this.order.baseorder.BookingPickOffTime = this.dataForm.dueDateTime
+      this.order.baseorder.PickoffTime = this.dataForm.dueDateTime
       this.order.baseorder.status = '已续租'
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
